@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AndroidPlacePicker"
-include(":app")
+include(":sampleapp")
 include(":placepicker")
