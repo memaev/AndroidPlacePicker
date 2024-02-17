@@ -73,7 +73,7 @@ publishing{
         create<MavenPublication>("release"){
             groupId = "dem.llc"
             artifactId = "placepicker"
-            version = "1.0.0"
+            version = "1.0.1"
 
             artifact("$buildDir/outputs/aar/placepicker-release.aar")
 

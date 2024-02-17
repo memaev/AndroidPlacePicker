@@ -1,4 +1,0 @@
-jdk:
-  - openjdk20
-before_install:
-  - ./scripts/prepareJitpackEnvironment.sh
