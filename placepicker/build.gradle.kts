@@ -45,6 +45,16 @@ android {
     }
 }
 
+publishing{
+    publications{
+        register<MavenPublication>("release"){
+            afterEvaluate{
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -68,38 +78,3 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
 }
 
-publishing{
-    publications{
-        create<MavenPublication>("release"){
-            groupId = "dem.llc"
-            artifactId = "placepicker"
-            version = "1.0.1"
-
-            artifact("$buildDir/outputs/aar/placepicker-release.aar")
-
-            pom {
-                name.set("AndroidPlacePicker")
-                description.set("A library for picking places on Android.")
-                url.set("https://github.com/memaev/AndroidPlacePicker")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("memaev")
-                        name.set("Mikhail Maevskii") // Replace with your actual name
-                        email.set("memaevskii@gmail.com") // Replace with your actual email
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/memaev/AndroidPlacePicker.git")
-                    developerConnection.set("scm:git:ssh://github.com:memaev/AndroidPlacePicker.git")
-                    url.set("https://github.com/memaev/AndroidPlacePicker/tree/main")
-                }
-            }
-        }
-    }
-}
