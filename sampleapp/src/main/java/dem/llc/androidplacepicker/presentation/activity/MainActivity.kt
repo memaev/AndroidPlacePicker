@@ -16,6 +16,7 @@ import dem.llc.androidplacepicker.presentation.viewModel.MainActivityViewModel
 import dem.llc.androidplacepicker.ui.theme.AndroidPlacePickerTheme
 import dem.llc.placepicker.entity.Location
 import dem.llc.placepicker.presentation.activity.PlacePickerActivity
+import dem.llc.placepicker.util.intent.PlacePickerIntent
 import dem.llc.placepicker.util.namespace.API_KEY
 import dem.llc.placepicker.util.namespace.LOCATION
 import dem.llc.placepicker.util.parce.getParcelable
@@ -55,8 +56,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openPicker(){
-        val intent = Intent(this@MainActivity, PlacePickerActivity::class.java)
-        intent.putExtra(API_KEY, "your-api-key")
+        val intent = PlacePickerIntent.Builder()
+            .setApiKey("your-api-key")
+            .build(this@MainActivity)
         pickerActivityResult.launch(intent)
     }
 

@@ -73,5 +73,5 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("com.github.memaev:AndroidPlacePicker:1.0.4")
+    implementation(project(":placepicker"))
 }
