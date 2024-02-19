@@ -1,0 +1,47 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2024-02-19T10:17:48.62373"><title>Adding library to your project | Help Instance</title><script type="application/json" id="virtual-toc-data">[{"id":"adding-jitpack","level":0,"title":"Adding jitpack","anchor":"#adding-jitpack"},{"id":"adding-dependency-to-build-gradle","level":0,"title":"Adding dependency to build.gradle","anchor":"#adding-dependency-to-build-gradle"},{"id":"add-place-picker-activity-to-androidmanifest-xml","level":0,"title":"Add place picker activity to AndroidManifest.xml","anchor":"#add-place-picker-activity-to-androidmanifest-xml"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.css" rel="stylesheet"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><link rel="manifest" href="site.webmanifest"><meta name="msapplication-TileColor" content="#000000"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Adding library to your project | Help Instance"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Help Instance Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="adding-library-to-project.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Adding library to your project | Help Instance"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "adding-library-to-project.html#webpage",
+    "url": "adding-library-to-project.html",
+    "name": "Adding library to your project | Help Instance",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "/#website",
+    "url": "/",
+    "name": "Help Instance Help"
+}</script><!-- End Schema.org --></head><body data-id="Adding-library-to-project" data-main-title="Adding library to your project" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Help Instance  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="Adding-library-to-project" id="Adding-library-to-project.md">Adding library to your project</h1><p id="48ca7d22_3">In order to add library to your project you need to do the following:</p><ul class="list _ul" id="48ca7d22_4"><li class="list__item" id="48ca7d22_5"><p>Add <code class="code" id="48ca7d22_6">Jitpack</code> to your <code class="code" id="48ca7d22_7">settings.gradle</code></p></li><li class="list__item" id="48ca7d22_8"><p>Add dependency to your <span class="control" id="48ca7d22_9">app</span> level <code class="code" id="48ca7d22_10">build.gradle</code></p></li><li class="list__item" id="48ca7d22_11"><p>Add place picker activity to your <code class="code" id="48ca7d22_12">AndroidManifest.xml</code></p></li></ul><section class="chapter"><h2 id="adding-jitpack" data-toc="adding-jitpack">Adding jitpack</h2><p id="48ca7d22_13">To your <code class="code" id="48ca7d22_14">settings.gradle.kts</code> add Jitpack import:</p><div class="tabs" id="48ca7d22_15"><div class="tabs__content" data-gtm="tab" id="48ca7d22_16" data-title="Kotlin DSL"><div class="code-block" data-lang="kotlin" data-title="Kotlin"> 
+dependencyResolutionManagement {
+    ...
+    repositories {
+        maven{ url = uri(&quot;https://jitpack.io&quot;) }
+    }
+}
+</div></div><div class="tabs__content" data-gtm="tab" id="48ca7d22_18" data-title="Groovy"><div class="code-block" data-lang="groovy" data-title="Groovy"> 
+dependencyResolutionManagement {
+    ...
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+</div></div></div></section><section class="chapter"><h2 id="adding-dependency-to-build-gradle" data-toc="adding-dependency-to-build-gradle">Adding dependency to build.gradle</h2><p id="48ca7d22_20">Add the following dependency to app module <code class="code" id="48ca7d22_21">build.gradle</code> file:</p><div class="tabs" id="48ca7d22_22"><div class="tabs__content" data-gtm="tab" id="48ca7d22_23" data-title="Kotlin DSL"><div class="code-block" data-lang="kotlin" data-title="Kotlin">
+dependencies{
+    ...
+    implementation(&quot;com.github.memaev:AndroidPlacePicker: [current-version]&quot;)
+}
+</div></div><div class="tabs__content" data-gtm="tab" id="48ca7d22_25" data-title="Groovy"><div class="code-block" data-lang="groovy" data-title="Groovy">
+dependencies{
+    ...
+    implementation 'com.github.memaev:AndroidPlacePicker: [current-version]'
+}
+</div></div></div><p id="48ca7d22_27">Replace [current-version] with the latest version of the library. You can view it in releases tab.</p></section><section class="chapter"><h2 id="add-place-picker-activity-to-androidmanifest-xml" data-toc="add-place-picker-activity-to-androidmanifest-xml">Add place picker activity to AndroidManifest.xml</h2><p id="48ca7d22_28">In order to open new activity for place picking you need to mark it in your manifest file. To do it go to <span class="control" id="48ca7d22_29">manifest -&gt; AndroidManifest.xml</span> and add new <code class="code" id="48ca7d22_30">activity</code> to your application:</p><div class="code-block" data-lang="markup">
+&lt;application
+ ... &gt;
+ 
+&lt;activity android:name=&quot;dem.llc.placepicker.presentation.activity.PlacePickerActivity&quot; /&gt;
+
+&lt;/application&gt;
+</div></section><div class="last-modified">Last modified: 19 February 2024</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="androidplacepicker.html" class="navigation-links__prev">Starter</a><a href="how-to-use.html" class="navigation-links__next">How to use</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.6.6-b205/app.js"></script></body></html>

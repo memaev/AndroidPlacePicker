@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
     private fun openPicker(){
         val intent = PlacePicker.IntentBuilder()
             .setApiKey("your-api-key")
-            .build(this@MainActivity)
+            .build(this)
         pickerActivityResult.launch(intent)
     }
 
