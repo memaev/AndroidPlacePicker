@@ -9,7 +9,7 @@ data class Point(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0
 ) : Parcelable{
-    fun toLatLng() : LatLng{
+    fun toLatLng():LatLng{
         return LatLng(latitude, longitude)
     }
 }

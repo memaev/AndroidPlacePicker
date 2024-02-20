@@ -38,7 +38,7 @@ class PlacePickerActivity : ComponentActivity() {
 
     private val permissionRequestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ){permissions->
+    ){ permissions->
         permissions.forEach { (_, isGranted) ->
             if (!isGranted) return@forEach
         }
