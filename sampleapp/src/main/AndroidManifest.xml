@@ -13,7 +13,9 @@
         android:theme="@style/Theme.AndroidPlacePicker"
         tools:targetApi="31">
         <activity
-            android:name="dem.llc.placepicker.presentation.activity.PlacePickerActivity" />
+            android:name="dem.llc.placepicker.presentation.activity.PlacePickerActivity"
+            android:exported="false"
+            />
         <activity
             android:name=".presentation.activity.MainActivity"
             android:exported="true"
@@ -24,6 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBfUupkwJjDgpsFr1zcLEi7vmCH8x5Bk_8" />
     </application>
 
 </manifest>

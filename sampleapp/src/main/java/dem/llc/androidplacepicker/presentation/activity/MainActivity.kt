@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     ){result->
         val address = result.data?.getParcelable<Location>(LOCATION)
         if (result.resultCode== RESULT_OK && address!=null){
-            viewModel.result.value = address.latitude.toString()
+            viewModel.result.value = address.position.toString()
         }else{
             viewModel.result.value = "Result FAILED"
         }

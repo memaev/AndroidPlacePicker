@@ -77,5 +77,9 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("com.google.maps.android:maps-compose:2.9.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 }
 
