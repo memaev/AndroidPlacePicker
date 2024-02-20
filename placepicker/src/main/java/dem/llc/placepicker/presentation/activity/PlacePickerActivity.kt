@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -45,6 +47,8 @@ class PlacePickerActivity : ComponentActivity() {
         viewModel.loadLocation(locationClient)
     }
 
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,16 +57,20 @@ class PlacePickerActivity : ComponentActivity() {
 
         setContent {
             PlacePickerTheme {
-//                val cameraPositionState = rememberCameraPositionState()
-//
-//                LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
-//                    cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
-//                }
+                BottomSheetScaffold(sheetContent = {
 
-                MainScreen(
-                    cameraPositionState = rememberCameraPositionState(),
-                    curLocation = viewModel.defaultPlace.value.position.toLatLng()
-                )
+                }) {
+                    val cameraPositionState = rememberCameraPositionState()
+
+                    LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
+                        cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
+                    }
+
+                    MainScreen(
+                        cameraPositionState = rememberCameraPositionState(),
+                        curLocation = viewModel.defaultPlace.value.position.toLatLng()
+                    )
+                }
             }
         }
     }
