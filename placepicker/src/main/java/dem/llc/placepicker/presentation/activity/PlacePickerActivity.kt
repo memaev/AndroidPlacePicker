@@ -102,9 +102,9 @@ fun Map(curLocation: LatLng, cameraPositionState: CameraPositionState){
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
         properties = MapProperties(
-            isMyLocationEnabled = true,
-            mapType = MapType.HYBRID,
-            isTrafficEnabled = true
+            mapType = MapType.NORMAL,
+            isTrafficEnabled = true,
+            isMyLocationEnabled = false
         )
     ){
         Marker(
