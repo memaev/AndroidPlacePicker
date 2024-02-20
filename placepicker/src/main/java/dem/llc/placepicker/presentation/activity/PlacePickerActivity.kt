@@ -11,8 +11,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
@@ -26,6 +28,7 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import dem.llc.placepicker.entity.Location
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
 import dem.llc.placepicker.ui.theme.PlacePickerTheme
 import dem.llc.placepicker.util.location.DefaultLocationClient
@@ -58,7 +61,7 @@ class PlacePickerActivity : ComponentActivity() {
         setContent {
             PlacePickerTheme {
                 BottomSheetScaffold(sheetContent = {
-
+                    Text(text = "Hello, world!")
                 }) {
                     val cameraPositionState = rememberCameraPositionState()
 
@@ -68,7 +71,7 @@ class PlacePickerActivity : ComponentActivity() {
 
                     MainScreen(
                         cameraPositionState = rememberCameraPositionState(),
-                        curLocation = viewModel.defaultPlace.value.position.toLatLng()
+                        curLocation = viewModel.defaultPlace
                     )
                 }
             }
@@ -96,7 +99,7 @@ class PlacePickerActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(curLocation: LatLng, cameraPositionState: CameraPositionState){
+fun MainScreen(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
     Map(
         cameraPositionState = cameraPositionState,
         curLocation = curLocation
@@ -104,8 +107,8 @@ fun MainScreen(curLocation: LatLng, cameraPositionState: CameraPositionState){
 }
 
 @Composable
-fun Map(curLocation: LatLng, cameraPositionState: CameraPositionState){
-    val markerPos = LatLng(curLocation.latitude, curLocation.longitude)
+fun Map(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
+    val markerPos = LatLng(curLocation.value.position.latitude, curLocation.value.position.longitude)
     GoogleMap (
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
@@ -139,6 +142,6 @@ private suspend fun CameraPositionState.centerOnLocation(
 fun GreetingPreview2() {
     PlacePickerTheme {
         val cameraPositionState = rememberCameraPositionState()
-        MainScreen(curLocation = LatLng(0.0, 0.0), cameraPositionState = cameraPositionState)
+//        MainScreen(curLocation = LatLng(0.0, 0.0), cameraPositionState = cameraPositionState)
     }
 }
