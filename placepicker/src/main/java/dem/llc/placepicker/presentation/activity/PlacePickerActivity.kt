@@ -53,14 +53,14 @@ class PlacePickerActivity : ComponentActivity() {
 
         setContent {
             PlacePickerTheme {
-                val cameraPositionState = rememberCameraPositionState()
-
-                LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
-                    cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
-                }
+//                val cameraPositionState = rememberCameraPositionState()
+//
+//                LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
+//                    cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
+//                }
 
                 MainScreen(
-                    cameraPositionState = cameraPositionState,
+                    cameraPositionState = rememberCameraPositionState(),
                     curLocation = viewModel.defaultPlace.value.position.toLatLng()
                 )
             }
