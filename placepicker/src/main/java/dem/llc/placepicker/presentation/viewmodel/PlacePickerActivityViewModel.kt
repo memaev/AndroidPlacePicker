@@ -38,6 +38,8 @@ class PlacePickerActivityViewModel : ViewModel() {
             .getAddress(point.latitude, point.longitude){address ->
                 address?.let{
                     currLocation.value.name = address.getAddressLine(0)
+                } ?: run{
+                    currLocation.value.name = "Unknown place"
                 }
             }
     }

@@ -48,6 +48,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import dem.llc.placepicker.R
 import dem.llc.placepicker.entity.Location
 import dem.llc.placepicker.entity.Point
+import dem.llc.placepicker.presentation.bottomSheet.LocationBottomSheet
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
 import dem.llc.placepicker.ui.components.CustomSearchBar
 import dem.llc.placepicker.ui.theme.PlacePickerTheme
@@ -90,22 +91,10 @@ class PlacePickerActivity : ComponentActivity() {
                         longitude = cameraPositionState.position.target.longitude
                     )
                 )
+                viewModel.getName(baseContext, viewModel.currLocation.value.position)
 
                 BottomSheetScaffold(sheetContent = {
-
-                    Row (
-                        modifier = Modifier.padding(20.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ){
-                        Text(
-                            text = viewModel.currLocation.value.position.latitude.toString()
-                        )
-                        Spacer(Modifier.width(10.dp))
-                        Text(
-                            text = viewModel.currLocation.value.position.longitude.toString()
-                        )
-                    }
-
+                    LocationBottomSheet()
                 }) {
                     MainScreen(
                         context = baseContext,
