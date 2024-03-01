@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Location(
-    val name: String? = null,
+    var name: String? = null,
     val position: Point = Point(0.0, 0.0)
 ) : Parcelable

@@ -1,36 +1,57 @@
 package dem.llc.placepicker.presentation.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Camera
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import dem.llc.placepicker.R
 import dem.llc.placepicker.entity.Location
+import dem.llc.placepicker.entity.Point
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
+import dem.llc.placepicker.ui.components.CustomSearchBar
 import dem.llc.placepicker.ui.theme.PlacePickerTheme
+import dem.llc.placepicker.util.bitmap.bitmapDescriptorFromVector
 import dem.llc.placepicker.util.location.DefaultLocationClient
 import dem.llc.placepicker.util.namespace.LOCATION
 
@@ -60,18 +81,35 @@ class PlacePickerActivity : ComponentActivity() {
 
         setContent {
             PlacePickerTheme {
-                BottomSheetScaffold(sheetContent = {
-                    Text(text = "Hello, world!")
-                }) {
-                    val cameraPositionState = rememberCameraPositionState()
+                val cameraPositionState = rememberCameraPositionState()
 
-                    LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
-                        cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
+                viewModel.currLocation.value = Location(
+                    name = "Default place",
+                    position = Point(
+                        latitude = cameraPositionState.position.target.latitude,
+                        longitude = cameraPositionState.position.target.longitude
+                    )
+                )
+
+                BottomSheetScaffold(sheetContent = {
+
+                    Row (
+                        modifier = Modifier.padding(20.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Text(
+                            text = viewModel.currLocation.value.position.latitude.toString()
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            text = viewModel.currLocation.value.position.longitude.toString()
+                        )
                     }
 
+                }) {
                     MainScreen(
-                        cameraPositionState = rememberCameraPositionState(),
-                        curLocation = viewModel.defaultPlace
+                        context = baseContext,
+                        cameraPositionState = cameraPositionState
                     )
                 }
             }
@@ -80,7 +118,7 @@ class PlacePickerActivity : ComponentActivity() {
 
     private fun returnResult(){
         val intent = Intent()
-        intent.putExtra(LOCATION, viewModel.defaultPlace.value)
+        intent.putExtra(LOCATION, viewModel.currLocation.value)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -99,16 +137,33 @@ class PlacePickerActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
+fun MainScreen(
+    context: Context,
+    cameraPositionState: CameraPositionState,
+    viewModel: PlacePickerActivityViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+){
     Map(
-        cameraPositionState = cameraPositionState,
-        curLocation = curLocation
+        context = context,
+        cameraPositionState = cameraPositionState
     )
+
+    Column (
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(top = 15.dp)
+    ){
+        CustomSearchBar(searchBarState = viewModel.searchBarState)
+    }
 }
 
 @Composable
-fun Map(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
-    val markerPos = LatLng(curLocation.value.position.latitude, curLocation.value.position.longitude)
+fun Map(
+    context: Context,
+    cameraPositionState: CameraPositionState
+){
+    val uiSettings by remember{ mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
+
     GoogleMap (
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
@@ -116,26 +171,18 @@ fun Map(curLocation: MutableState<Location>, cameraPositionState: CameraPosition
             mapType = MapType.NORMAL,
             isTrafficEnabled = true,
             isMyLocationEnabled = false
-        )
+        ),
+        uiSettings = uiSettings
     ){
         Marker(
-            state = MarkerState(position = markerPos),
+            state = MarkerState(position = cameraPositionState.position.target),
             title = "My position",
             snippet = "This is my position description",
-            draggable = true
+            draggable = true,
+            icon = bitmapDescriptorFromVector(context, R.drawable.marker_icon)
         )
     }
 }
-
-private suspend fun CameraPositionState.centerOnLocation(
-    location: LatLng
-) = animate(
-    update = CameraUpdateFactory.newLatLngZoom(
-        location,
-        15f
-    ),
-    durationMs = 1500
-)
 
 @Preview(showBackground = true)
 @Composable
