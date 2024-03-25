@@ -91,7 +91,7 @@ class PlacePickerActivity : ComponentActivity() {
                         longitude = cameraPositionState.position.target.longitude
                     )
                 )
-                viewModel.getName(baseContext, viewModel.currLocation.value.position)
+                viewModel.setAddress(baseContext, viewModel.currLocation.value.position.latitude,viewModel.currLocation.value.position.longitude)
 
                 BottomSheetScaffold(sheetContent = {
                     LocationBottomSheet()
@@ -118,7 +118,8 @@ class PlacePickerActivity : ComponentActivity() {
         if (isFineLocationGranted != PackageManager.PERMISSION_GRANTED || isCoarseLocationGranted != PackageManager.PERMISSION_GRANTED)
             permissionRequestLauncher.launch(arrayOf(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.INTERNET
             ))
         else
             viewModel.loadLocation(locationClient)
