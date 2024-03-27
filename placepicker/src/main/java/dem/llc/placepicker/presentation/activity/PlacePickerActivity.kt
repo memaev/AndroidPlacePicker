@@ -46,8 +46,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dem.llc.placepicker.R
-import dem.llc.placepicker.entity.Location
-import dem.llc.placepicker.entity.Point
+import dem.llc.placepicker.domain.entity.Location
+import dem.llc.placepicker.domain.entity.Point
 import dem.llc.placepicker.presentation.bottomSheet.LocationBottomSheet
 import dem.llc.placepicker.presentation.screens.MainScreen
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel

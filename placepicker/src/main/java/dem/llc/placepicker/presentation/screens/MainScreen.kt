@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.maps.android.compose.rememberCameraPositionState
-import dem.llc.placepicker.entity.Point
+import dem.llc.placepicker.domain.entity.Point
 import dem.llc.placepicker.presentation.bottomSheet.LocationBottomSheet
 import dem.llc.placepicker.presentation.components.Map
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel

@@ -9,8 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dem.llc.placepicker.entity.Location
-import dem.llc.placepicker.entity.Point
+import dem.llc.placepicker.domain.entity.Location
+import dem.llc.placepicker.domain.entity.Point
 import dem.llc.placepicker.ui.state.SearchBarState
 import dem.llc.placepicker.util.location.DefaultLocationClient
 import dem.llc.placepicker.util.location.LocationRepository.getAddress

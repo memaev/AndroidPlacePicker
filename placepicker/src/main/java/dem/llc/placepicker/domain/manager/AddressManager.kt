@@ -1,10 +1,10 @@
 package dem.llc.placepicker.domain.manager
 
 import android.location.Geocoder
-
-typealias ShortAddress = String
-typealias FullAddress = String
+import dem.llc.placepicker.domain.entity.Point
+import dem.llc.placepicker.domain.util.Result
 
 interface AddressManager {
-    suspend fun getAddress(geocoder: Geocoder, latitude: Double, longitude: Double): Pair<ShortAddress, FullAddress>
+    suspend fun getAddressName(point: Point): Result
+    suspend fun getLocationByName(name: String): Result
 }
