@@ -49,6 +49,7 @@ import dem.llc.placepicker.R
 import dem.llc.placepicker.entity.Location
 import dem.llc.placepicker.entity.Point
 import dem.llc.placepicker.presentation.bottomSheet.LocationBottomSheet
+import dem.llc.placepicker.presentation.screens.MainScreen
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
 import dem.llc.placepicker.ui.components.CustomSearchBar
 import dem.llc.placepicker.ui.theme.PlacePickerTheme
@@ -82,25 +83,7 @@ class PlacePickerActivity : ComponentActivity() {
 
         setContent {
             PlacePickerTheme {
-                val cameraPositionState = rememberCameraPositionState()
-
-                viewModel.currLocation.value = Location(
-                    name = "Default place",
-                    position = Point(
-                        latitude = cameraPositionState.position.target.latitude,
-                        longitude = cameraPositionState.position.target.longitude
-                    )
-                )
-                viewModel.setAddress(baseContext, viewModel.currLocation.value.position.latitude,viewModel.currLocation.value.position.longitude)
-
-                BottomSheetScaffold(sheetContent = {
-                    LocationBottomSheet()
-                }) {
-                    MainScreen(
-                        context = baseContext,
-                        cameraPositionState = cameraPositionState
-                    )
-                }
+                MainScreen()
             }
         }
     }
@@ -123,54 +106,6 @@ class PlacePickerActivity : ComponentActivity() {
             ))
         else
             viewModel.loadLocation(locationClient)
-    }
-}
-
-@Composable
-fun MainScreen(
-    context: Context,
-    cameraPositionState: CameraPositionState,
-    viewModel: PlacePickerActivityViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-){
-    Map(
-        context = context,
-        cameraPositionState = cameraPositionState
-    )
-
-    Column (
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(top = 15.dp)
-    ){
-        CustomSearchBar(searchBarState = viewModel.searchBarState)
-    }
-}
-
-@Composable
-fun Map(
-    context: Context,
-    cameraPositionState: CameraPositionState
-){
-    val uiSettings by remember{ mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
-
-    GoogleMap (
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-        properties = MapProperties(
-            mapType = MapType.NORMAL,
-            isTrafficEnabled = true,
-            isMyLocationEnabled = false
-        ),
-        uiSettings = uiSettings
-    ){
-        Marker(
-            state = MarkerState(position = cameraPositionState.position.target),
-            title = "My position",
-            snippet = "This is my position description",
-            draggable = true,
-            icon = bitmapDescriptorFromVector(context, R.drawable.marker_icon)
-        )
     }
 }
 

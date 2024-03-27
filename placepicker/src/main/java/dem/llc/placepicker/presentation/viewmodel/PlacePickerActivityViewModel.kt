@@ -4,6 +4,8 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,14 +13,15 @@ import dem.llc.placepicker.entity.Location
 import dem.llc.placepicker.entity.Point
 import dem.llc.placepicker.ui.state.SearchBarState
 import dem.llc.placepicker.util.location.DefaultLocationClient
-import dem.llc.placepicker.util.location.LocationRepository
 import dem.llc.placepicker.util.location.LocationRepository.getAddress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
 class PlacePickerActivityViewModel : ViewModel() {
+
+    private val _location = mutableStateOf(Point(0.0, 0.0))
+    val location: State<Point> = _location
 
     private var addresses: List<Address>? = null
     private var shortAddress = ""
@@ -36,6 +39,23 @@ class PlacePickerActivityViewModel : ViewModel() {
         locationClient.getCurrentLocation {
             currLocation.value = it
         }
+    }
+
+    fun updateLocation(context: Context, point: Point) {
+        followOnLocationUpdates(context, point)
+    }
+
+    private fun followOnLocationUpdates(context: Context, point: Point) {
+        _location.value = point.copy()
+        currLocation.value = Location(
+            name = currLocation.value.name,
+            position = point
+        )
+        setAddress(
+            context,
+            point.latitude,
+            point.longitude
+        )
     }
 
     fun getName(context: Context,latitude: Double,
