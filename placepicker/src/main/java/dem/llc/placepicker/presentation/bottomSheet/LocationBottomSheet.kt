@@ -14,11 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dem.llc.placepicker.domain.entity.Point
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
 
 @Composable
 fun LocationBottomSheet(
-    viewModel: PlacePickerActivityViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    location: Point
 ){
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -31,25 +32,25 @@ fun LocationBottomSheet(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = viewModel.currLocation.value.position.latitude.toString()
+                text = location.latitude.toString()
             )
             Spacer(Modifier.width(10.dp))
             Text(
-                text = viewModel.currLocation.value.position.longitude.toString()
+                text = location.longitude.toString()
             )
         }
 
-        if (viewModel.currLocation.value.name==null)
-            CircularProgressIndicator()
-        else
-            Text(
-                text = viewModel.currLocation.value.name!!
-            )
+//        if (viewModel.currLocation.value.name==null)
+//            CircularProgressIndicator()
+//        else
+//            Text(
+//                text = viewModel.currLocation.value.name!!
+//            )
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun LocationBottomSheetPreview() {
-    LocationBottomSheet()
+    LocationBottomSheet(location = Point(0.0, 0.0))
 }

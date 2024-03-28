@@ -3,8 +3,8 @@ package dem.llc.placepicker.util.location
 import android.annotation.SuppressLint
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
-import dem.llc.placepicker.entity.Location
-import dem.llc.placepicker.entity.Point
+import dem.llc.placepicker.domain.entity.Location
+import dem.llc.placepicker.domain.entity.Point
 
 class DefaultLocationClient(
     private val client: FusedLocationProviderClient
