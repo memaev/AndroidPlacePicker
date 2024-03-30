@@ -22,7 +22,8 @@ import dem.llc.placepicker.domain.entity.Point
 fun LocationBottomDetail(
     modifier: Modifier = Modifier,
     location: Point,
-    city: String
+    city: String,
+    onSelect: () -> Unit
 
 ){
     Card(
@@ -49,7 +50,7 @@ fun LocationBottomDetail(
             )
             Button(
                 modifier = Modifier.fillMaxWidth(0.6f),
-                onClick = { /*TODO*/ }
+                onClick = onSelect
             ) {
                 Text(text = "Select")
             }

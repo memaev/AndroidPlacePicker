@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
     private val pickerActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ){result->
+    ){ result->
         val address = result.data?.getParcelable<Location>(LOCATION)
         if (result.resultCode== RESULT_OK && address!=null){
             viewModel.result.value = address.position.toString()
