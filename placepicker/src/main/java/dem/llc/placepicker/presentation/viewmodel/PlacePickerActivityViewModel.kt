@@ -1,109 +1,54 @@
 package dem.llc.placepicker.presentation.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
-import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dem.llc.placepicker.domain.entity.Location
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dem.llc.placepicker.domain.entity.Point
-import dem.llc.placepicker.ui.state.SearchBarState
-import dem.llc.placepicker.util.location.DefaultLocationClient
-import dem.llc.placepicker.util.location.LocationRepository.getAddress
+import dem.llc.placepicker.domain.manager.LocationManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
+import javax.inject.Inject
 
-class PlacePickerActivityViewModel : ViewModel() {
+@SuppressLint("MissingPermission")
+class PlacePickerActivityViewModel(
+    locationManager: LocationManager
+) : ViewModel() {
 
-    private val _location = mutableStateOf(Point(0.0, 0.0))
-    val location: State<Point> = _location
+    private val _location: MutableStateFlow<Point> = MutableStateFlow(Point(0.0, 0.0))
+    val location = _location.asStateFlow()
 
-    private var addresses: List<Address>? = null
-    private var shortAddress = ""
-    private var fullAddress = ""
-    val currLocation = mutableStateOf(
-        Location (
-            name = "Default place",
-            position = Point(0.0, 0.0)
-        )
-    )
+     var test = mutableStateOf("")
 
-    val searchBarState = SearchBarState{}
-
-    fun loadLocation(locationClient: DefaultLocationClient){
-        locationClient.getCurrentLocation {
-            currLocation.value = it
+    init {
+        viewModelScope.launch(Dispatchers.IO){
+            locationManager.getCurrentLocation { point ->
+                _location.value = point
+            }
         }
     }
 
-    fun updateLocation(context: Context, point: Point) {
-        followOnLocationUpdates(context, point)
+    fun updateLocation(location: LatLng) {
+        _location.value = Point(location.latitude, location.longitude)
     }
 
-    private fun followOnLocationUpdates(context: Context, point: Point) {
-        _location.value = point.copy()
-        currLocation.value = Location(
-            name = currLocation.value.name,
-            position = point
-        )
-        setAddress(
-            context,
-            point.latitude,
-            point.longitude
-        )
-    }
+    private fun updateAddress(latitude: Double, longitude: Double, context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
 
-    fun getName(context: Context,latitude: Double,
-                longitude: Double) = viewModelScope.launch (Dispatchers.IO){
-        currLocation.value.name = null
-
-        Geocoder(context, Locale("en"))
-            .getAddress(latitude, longitude){address ->
-                address?.let{
-                    currLocation.value.name = address.countryName.toString()
-                } ?: run{
-                    currLocation.value.name = "Unknown place"
-                }
-            }
-    }
-
-    fun setAddress(
-        context: Context,
-        latitude: Double,
-        longitude: Double
-    ) {
-        val geoCoder = Geocoder(context, Locale.getDefault())
-        try {
-
-
-            val addresses = geoCoder.getFromLocation(latitude, longitude, 1)
-            this.addresses= addresses
-            return if (addresses != null && addresses.size != 0) {
-                fullAddress = addresses[0].getAddressLine(
-                    0
-                ) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                currLocation.value.name = generateFinalAddress(fullAddress).trim()
-            } else {
-                shortAddress = ""
-                fullAddress = ""
-            }
-        } catch (e: Exception) {
-            //Time Out in getting address
-            e.message?.let { Log.e("TAG", it) }
-            shortAddress = ""
-            fullAddress = ""
-            addresses = null
         }
+
     }
-    fun generateFinalAddress(
-        address: String
-    ): String {
-        val s = address.split(",")
-        return if (s.size >= 3) s[1] + "," + s[2] else if (s.size == 2) s[1] else s[0]
+
+    fun generateFinalAddress(address: String): String {
+        val parts = address.split(",")
+        return if (parts.size >= 3) "${parts[1]}, ${parts[2]}" else if (parts.size == 2) parts[1] else parts[0]
     }
+
 }
