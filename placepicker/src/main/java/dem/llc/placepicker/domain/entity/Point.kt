@@ -1,4 +1,4 @@
-package dem.llc.placepicker.entity
+package dem.llc.placepicker.domain.entity
 
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng

@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import dem.llc.androidplacepicker.presentation.viewModel.MainActivityViewModel
 import dem.llc.androidplacepicker.ui.theme.AndroidPlacePickerTheme
-import dem.llc.placepicker.entity.Location
+import dem.llc.placepicker.domain.entity.Location
 import dem.llc.placepicker.util.intent.PlacePicker
 import dem.llc.placepicker.util.namespace.LOCATION
 import dem.llc.placepicker.util.parce.getParcelable
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
     private val pickerActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ){result->
+    ){ result->
         val address = result.data?.getParcelable<Location>(LOCATION)
         if (result.resultCode== RESULT_OK && address!=null){
             viewModel.result.value = address.position.toString()

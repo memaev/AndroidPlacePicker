@@ -7,47 +7,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import dem.llc.placepicker.entity.Location
+import dem.llc.placepicker.data.LocationManagerRepository
+import dem.llc.placepicker.domain.entity.Point
+import dem.llc.placepicker.presentation.screens.MainScreen
 import dem.llc.placepicker.presentation.viewmodel.PlacePickerActivityViewModel
 import dem.llc.placepicker.ui.theme.PlacePickerTheme
-import dem.llc.placepicker.util.location.DefaultLocationClient
 import dem.llc.placepicker.util.namespace.LOCATION
+
 
 class PlacePickerActivity : ComponentActivity() {
 
-    private val viewModel: PlacePickerActivityViewModel by viewModels()
-
-    private lateinit var locationClient: DefaultLocationClient
-
+    private lateinit var placePickerViewModel: PlacePickerActivityViewModel
 
     private val permissionRequestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ){ permissions->
+    ){ permissions ->
         permissions.forEach { (_, isGranted) ->
             if (!isGranted) return@forEach
         }
-        viewModel.loadLocation(locationClient)
     }
 
 
@@ -55,32 +38,22 @@ class PlacePickerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        locationClient = DefaultLocationClient(LocationServices.getFusedLocationProviderClient(baseContext))
+        val locationManager = LocationManagerRepository(LocationServices.getFusedLocationProviderClient(this))
+        placePickerViewModel = PlacePickerActivityViewModel(locationManager)
         checkPermission()
+        
+
 
         setContent {
             PlacePickerTheme {
-                BottomSheetScaffold(sheetContent = {
-                    Text(text = "Hello, world!")
-                }) {
-                    val cameraPositionState = rememberCameraPositionState()
-
-                    LaunchedEffect(key1 = viewModel.defaultPlace.value.position){
-                        cameraPositionState.centerOnLocation(viewModel.defaultPlace.value.position.toLatLng())
-                    }
-
-                    MainScreen(
-                        cameraPositionState = rememberCameraPositionState(),
-                        curLocation = viewModel.defaultPlace
-                    )
-                }
+                MainScreen(placePickerViewModel)
             }
         }
     }
 
-    private fun returnResult(){
+    private fun returnResult(point: Point){
         val intent = Intent()
-        intent.putExtra(LOCATION, viewModel.defaultPlace.value)
+        intent.putExtra(LOCATION, point)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -91,51 +64,11 @@ class PlacePickerActivity : ComponentActivity() {
         if (isFineLocationGranted != PackageManager.PERMISSION_GRANTED || isCoarseLocationGranted != PackageManager.PERMISSION_GRANTED)
             permissionRequestLauncher.launch(arrayOf(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.INTERNET
             ))
-        else
-            viewModel.loadLocation(locationClient)
     }
 }
-
-@Composable
-fun MainScreen(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
-    Map(
-        cameraPositionState = cameraPositionState,
-        curLocation = curLocation
-    )
-}
-
-@Composable
-fun Map(curLocation: MutableState<Location>, cameraPositionState: CameraPositionState){
-    val markerPos = LatLng(curLocation.value.position.latitude, curLocation.value.position.longitude)
-    GoogleMap (
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-        properties = MapProperties(
-            mapType = MapType.NORMAL,
-            isTrafficEnabled = true,
-            isMyLocationEnabled = false
-        )
-    ){
-        Marker(
-            state = MarkerState(position = markerPos),
-            title = "My position",
-            snippet = "This is my position description",
-            draggable = true
-        )
-    }
-}
-
-private suspend fun CameraPositionState.centerOnLocation(
-    location: LatLng
-) = animate(
-    update = CameraUpdateFactory.newLatLngZoom(
-        location,
-        15f
-    ),
-    durationMs = 1500
-)
 
 @Preview(showBackground = true)
 @Composable
